@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/umaibou1126/goblockchain/block"
 	"github.com/umaibou1126/goblockchain/wallet"
 )
 
@@ -12,13 +13,24 @@ func init() {
 }
 
 func main() {
-	w := wallet.NewWallet()
-	fmt.Println(w.PrivateKeyStr())
-	fmt.Println(w.PublicKeyStr())
-	fmt.Println(w.BlockchainAddress())
+	// w := wallet.NewWallet()
+	// fmt.Println(w.PrivateKeyStr())
+	// fmt.Println(w.PublicKeyStr())
+	// fmt.Println(w.BlockchainAddress())
 
-	t := wallet.NewTransaction(w.PrivateKey(), w.PublicKey(), w.BlockchainAddress(), "B", 1.0)
-	fmt.Printf("signature %s\n", t.GenerateSignature())
+	walletM := wallet.NewWallet()
+	walletA := wallet.NewWallet()
+	walletB := wallet.NewWallet()
+
+	t := wallet.NewTransaction(walletA.PrivateKey(), walletA.PublicKey(), walletA.BlockchainAddress(), walletB.BlockchainAddress(), 1.0)
+
+	blockchain := block.NewBlockchain(walletM.BlockchainAddress())
+	isAdded := blockchain.AddTransaction(walletA.BlockchainAddress(), walletB.BlockchainAddress(), 1.0, walletA.PublicKey(), t.GenerateSignature())
+
+	fmt.Println("Added?", isAdded)
+	fmt.Printf("A %.1f\n", blockchain.CalculateTotalAmount(walletA.BlockchainAddress()))
+	fmt.Printf("M %.1f\n", blockchain.CalculateTotalAmount(walletM.BlockchainAddress()))
+	// fmt.Printf("signature %s\n", t.GenerateSignature())
 	// myBlockchainAddress := "my_blockchain_address"
 	// blockChain := NewBlockchain(myBlockchainAddress)
 	// blockChain.Print()
