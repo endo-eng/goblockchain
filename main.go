@@ -29,7 +29,7 @@ func main() {
 
 	fmt.Println("Added?", isAdded)
 	fmt.Printf("A %.1f\n", blockchain.CalculateTotalAmount(walletA.BlockchainAddress()))
-	fmt.Printf("M %.1f\n", blockchain.CalculateTotalAmount(walletM.BlockchainAddress()))
+	fmt.Printf(" %.1f\n", blockchain.CalculateTotalAmount(walletM.BlockchainAddress()))
 	// fmt.Printf("signature %s\n", t.GenerateSignature())
 	// myBlockchainAddress := "my_blockchain_address"
 	// blockChain := NewBlockchain(myBlockchainAddress)
