@@ -133,6 +133,7 @@ func (bc *Blockchain) Chain() []*Block {
 func (bc *Blockchain) Run() {
 	bc.StartSyncNeighbors()
 	bc.ResolveConflicts()
+	bc.StartMining()
 }
 
 func (bc *Blockchain) SetNeighbors() {
@@ -250,12 +251,12 @@ func (bc *Blockchain) AddTransaction(sender string, recipient string, value floa
 	}
 
 	if bc.VerifyTransactionSignature(senderPublicKey, s, t) {
-		/*
-			if bc.CalculateTotalAmount(sender) < value {
-				log.Println("ERROR: Not enough balance in a wallet")
-				return false
-			}
-		*/
+
+		if bc.CalculateTotalAmount(sender) < value {
+			log.Println("ERROR: Not enough balance in a wallet")
+			return false
+		}
+
 		bc.transactionPool = append(bc.transactionPool, t)
 		return true
 	} else {
@@ -304,9 +305,9 @@ func (bc *Blockchain) Mining() bool {
 	bc.mux.Lock()
 	defer bc.mux.Unlock()
 
-	if len(bc.transactionPool) == 0 {
-		return false
-	}
+	// if len(bc.transactionPool) == 0 {
+	// 	return false
+	// }
 
 	bc.AddTransaction(MINING_SENDER, bc.blockchainAddress, MINING_REWARD, nil, nil)
 	nonce := bc.ProofOfWork()
